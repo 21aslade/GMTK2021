@@ -13,7 +13,7 @@
 [ext_resource path="res://Sprites/Individual Sprites/adventurer-idle-01.png" type="Texture" id=11]
 [ext_resource path="res://Sprites/Individual Sprites/adventurer-idle-00.png" type="Texture" id=12]
 
-[sub_resource type="CSharpScript" id=3]
+[sub_resource type="CSharpScript" id=1]
 script/source = "using Godot;
 using System;
 using Godot.Node2D;
@@ -48,16 +48,16 @@ animations = [ {
 "frames": [ ExtResource( 12 ), ExtResource( 11 ), ExtResource( 10 ) ],
 "loop": true,
 "name": "idle",
+"speed": 1.5
+}, {
+"frames": [ ExtResource( 9 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 6 ) ],
+"loop": true,
+"name": "jump_land",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 6 ), ExtResource( 8 ), ExtResource( 7 ), ExtResource( 9 ) ],
 "loop": true,
 "name": "jump_up",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 9 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 6 ) ],
-"loop": true,
-"name": "jump_land",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 4 ), ExtResource( 1 ), ExtResource( 5 ), ExtResource( 3 ), ExtResource( 2 ) ],
@@ -66,30 +66,29 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 13, 28 )
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 6.5, 14 )
 
 [node name="Player" type="Node2D"]
-position = Vector2( 50, 50 )
-script = SubResource( 3 )
+script = SubResource( 1 )
+MaxSpeed = 40.0
 
 [node name="Physical" type="KinematicBody2D" parent="."]
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Physical"]
-scale = Vector2( 2, 2 )
+position = Vector2( 2, -4 )
 frames = SubResource( 2 )
 animation = "idle"
 playing = true
 offset = Vector2( -2, 0 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Physical"]
-position = Vector2( 1.5, 4 )
-shape = SubResource( 1 )
+shape = SubResource( 3 )
 
 [node name="Ghost" type="KinematicBody2D" parent="."]
 
-[node name="AnimatedSprite2" type="AnimatedSprite" parent="Ghost"]
-scale = Vector2( 2, 2 )
+[node name="AnimatedSprite" type="AnimatedSprite" parent="Ghost"]
+position = Vector2( 2, 3 )
 frames = SubResource( 2 )
 animation = "idle"
 playing = true
@@ -97,5 +96,4 @@ offset = Vector2( -2, 0 )
 flip_v = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ghost"]
-position = Vector2( 1.5, -4 )
-shape = SubResource( 1 )
+shape = SubResource( 3 )

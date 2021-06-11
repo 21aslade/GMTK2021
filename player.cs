@@ -9,6 +9,15 @@ public class player : Node2D {
     private KinematicBody2D physical;
     private KinematicBody2D ghost;
 
+    private void SetFlip(bool flip) {
+        physical.GetNode<AnimatedSprite>("AnimatedSprite").FlipH = flip;
+        ghost.GetNode<AnimatedSprite>("AnimatedSprite").FlipH = flip;
+    }
+
+    private void SetAnimation(string anim) {
+        physical.GetNode<AnimatedSprite>("AnimatedSprite").Animation = anim;
+        ghost.GetNode<AnimatedSprite>("AnimatedSprite").Animation = anim;
+    }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
@@ -23,19 +32,25 @@ public class player : Node2D {
         MoveHorizontal(delta);
     }
 
+
     public void MoveHorizontal(float delta) {
         bool left = Input.IsActionPressed("ui_left");
         bool right = Input.IsActionPressed("ui_right");
 
         // Either none or both are pressed
         if (left == right) {
+            SetAnimation("idle");
             return;
         }
+
+        // Flip sprites based on facing (flipped if left)
+        SetFlip(left);
+        SetAnimation("walk");
+
 
         // Direction is positive if right, negative otherwise
         // We know left ^ right, so checking for right is enough
         float direction = right ? 1 : -1;
-        GD.Print($"{direction}");
         float distance = direction * MaxSpeed * delta;
         Vector2 move = new Vector2(distance, 0.0f);
         
@@ -44,7 +59,7 @@ public class player : Node2D {
         // If it doesn't move the entire distance, shorten it
         if (testCollision != null) {
             distance = testCollision.Travel.x;
-            move = new Vector2(distance, 0.0f);
+            move.x = distance;
         }
 
         // Actually move ghost
@@ -52,7 +67,7 @@ public class player : Node2D {
         // If it doesn't move the entire distance, shorten it for physical
         if (ghostCollision != null) {
             distance = testCollision.Travel.x;
-            move = new Vector2(distance, 0.0f);
+            move.x = distance;
         }
 
         // Actually move person

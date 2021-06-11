@@ -16,7 +16,7 @@ _global_script_class_icons={
 [application]
 
 config/name="JoinedTogether"
-run/main_scene="res://player.tscn"
+run/main_scene="res://Test.tscn"
 config/icon="res://icon.png"
 
 [importer_defaults]
