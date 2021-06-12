@@ -84,7 +84,7 @@ public class vertical : KinematicBody2D {
 
         if (airState == AirState.Grounded) {
             // Fall slightly on ground so you still collide with it
-            verticalSpeed = -2.0f;
+            verticalSpeed = -4.0f;
         }
         return verticalSpeed;
     }

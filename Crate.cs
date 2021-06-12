@@ -10,6 +10,7 @@ public class Crate : Node2D {
     private CrateVertical physical;
     private CrateVertical ghost;
     private bool flipped;
+    private bool flipEdge;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
@@ -19,10 +20,36 @@ public class Crate : Node2D {
         ghost = GetNode<CrateVertical>("Ghost");
         ghost.Enable(UseGhost);
         ghost.Position = new Vector2(0.0f, GhostStart);
+
+        player p = GetNode<player>("/root/Test/Player");
+        p.Connect("SwapRealms", this, "SwapRealms");
+    }
+
+    private void SwapRealms() {
+        if (physical.PlayerColliding() || ghost.PlayerColliding()) {
+            flipEdge = true;
+        }
+    }
+
+    private void ActuallySwap() {
+        // Toggle flip
+        flipped = !flipped;
+
+        physical.Flip(flipped);
+        ghost.Flip(!flipped);
+
+        float topSpeed = physical.verticalSpeed;
+        physical.verticalSpeed = ghost.verticalSpeed;
+        ghost.verticalSpeed = topSpeed;
+
+        Vector2 topPosition = physical.Position;
+        physical.Position = ghost.Position;
+        ghost.Position = topPosition;
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _PhysicsProcess(float delta) {
+        float originalX = physical.Position.x;
         float horiz = MoveHorizontal();
 
         if (!flipped) {
@@ -32,6 +59,16 @@ public class Crate : Node2D {
         else {
             MoveCrate(physical, delta, horiz, 1.0f);
             MoveCrate(ghost, delta, horiz, -1.0f);
+        }
+
+        // POSITION SET USED AFTER THIS POINT
+        // NO MORE PHYSICS CALLS ALLOWED
+
+        SyncPositions(originalX);
+
+        if (flipEdge) {
+            flipEdge = false;
+            ActuallySwap();
         }
     }
 
@@ -44,5 +81,19 @@ public class Crate : Node2D {
 
     private float MoveHorizontal() {
         return 0.0f;
+    }
+
+    private void SyncPositions(float originalX) {
+        float physicalChange = Math.Abs(physical.Position.x - originalX);
+        float ghostChange = Math.Abs(ghost.Position.x - originalX);
+
+        if (physicalChange > ghostChange) {
+            Vector2 newPosition = new Vector2(ghost.Position.x, physical.Position.y);
+            physical.MoveAndCollide(newPosition - physical.Position);
+        }
+        else {
+            Vector2 newPosition = new Vector2(physical.Position.x, ghost.Position.y);
+            ghost.MoveAndCollide(newPosition - ghost.Position);
+        }
     }
 }

@@ -6,7 +6,7 @@ public class CrateVertical : KinematicBody2D
     [Export] public float TerminalVelocity = -80.0f;
     [Export] public float Gravity = -320.0f;
 
-    private float verticalSpeed;
+    public float verticalSpeed;
     private Area2D area;
     private Particles2D particles;
 
@@ -54,6 +54,7 @@ public class CrateVertical : KinematicBody2D
     }
 
     private void SwapEnter(Node body) {
+
         particles.Emitting = true;
     }
 

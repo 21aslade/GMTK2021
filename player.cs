@@ -73,9 +73,6 @@ public class player : Node2D {
         SetFlip(left);
         SetAnimationIfGrounded("walk");
 
-        // Save original position for later...
-        float originalX = physical.Position.x;
-
         // Direction is positive if right, negative otherwise
         // We know left ^ right, so checking for right is enough
         float direction = right ? 1 : -1;
@@ -141,5 +138,7 @@ public class player : Node2D {
         Vector2 topPosition = top.Position;
         top.Position = bottom.Position;
         bottom.Position = topPosition;
+
+        EmitSignal("SwapRealms");
     }
 }

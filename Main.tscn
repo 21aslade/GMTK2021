@@ -91,6 +91,5 @@ tile_data = PoolIntArray( -196616, 0, 0, -196612, 0, 0, -262144, 0, 0, -262140, 
 
 [node name="Crate" parent="." instance=ExtResource( 3 )]
 position = Vector2( 80.422, 0 )
-UsePhysical = false
 PhysicalStart = 90.0
 GhostStart = 80.0

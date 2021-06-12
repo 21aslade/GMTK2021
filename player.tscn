@@ -46,7 +46,7 @@ collision_layer = 3
 script = ExtResource( 3 )
 JumpLen = 0.0
 JumpSpeed = 0.0
-TerminalVelocity = -80.0
+TerminalVelocity = -160.0
 Gravity = -320.0
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Physical"]
@@ -67,7 +67,7 @@ collision_layer = 3
 script = ExtResource( 3 )
 JumpLen = 0.1
 JumpSpeed = 160.0
-TerminalVelocity = -80.0
+TerminalVelocity = -160.0
 Gravity = -320.0
 IsGhost = true
 
@@ -75,7 +75,7 @@ IsGhost = true
 position = Vector2( 2, 3 )
 frames = ExtResource( 1 )
 animation = "idle"
-frame = 1
+frame = 2
 playing = true
 offset = Vector2( -2, 0 )
 flip_v = true
