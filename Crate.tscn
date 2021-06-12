@@ -10,7 +10,7 @@
 extents = Vector2( 15, 16 )
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 30, 32 )
+extents = Vector2( 30, 24 )
 
 [sub_resource type="ParticlesMaterial" id=3]
 emission_shape = 2
@@ -44,6 +44,7 @@ collision_layer = 2
 collision_mask = 2147483650
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Physical/Swap"]
+position = Vector2( 0, 8 )
 shape = SubResource( 2 )
 
 [node name="Particles2D" type="Particles2D" parent="Physical"]
@@ -70,6 +71,7 @@ collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ghost/Swap"]
+position = Vector2( 0, 8 )
 shape = SubResource( 2 )
 
 [node name="Particles2D" type="Particles2D" parent="Ghost"]

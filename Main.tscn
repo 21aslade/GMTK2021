@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Sprites/CustomTiles/baseblock.png" type="Texture" id=2]
 [ext_resource path="res://Crate.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Sprites/CustomTiles/baseblock_flipped.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/CustomTiles/8x8block.png" type="Texture" id=5]
 
 [sub_resource type="NavigationPolygon" id=1]
 vertices = PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 )
@@ -24,6 +25,16 @@ polygon = PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 )
 
 [sub_resource type="ConvexPolygonShape2D" id=6]
 points = PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 )
+
+[sub_resource type="NavigationPolygon" id=8]
+vertices = PoolVector2Array( 8, 8, 0, 8, 0, 0, 8, 0 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+
+[sub_resource type="OccluderPolygon2D" id=9]
+polygon = PoolVector2Array( 8, 8, 0, 8, 0, 0, 8, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=10]
+points = PoolVector2Array( 8, 8, 0, 8, 0, 0, 8, 0 )
 
 [sub_resource type="TileSet" id=7]
 0/name = "baseblock.png 0"
@@ -72,6 +83,29 @@ points = PoolVector2Array( 32, 32, 0, 32, 0, 0, 32, 0 )
 "shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
 } ]
 1/z_index = 0
+2/name = "8x8block.png 2"
+2/texture = ExtResource( 5 )
+2/tex_offset = Vector2( 0, 0 )
+2/modulate = Color( 1, 1, 1, 1 )
+2/region = Rect2( 0, 0, 8, 8 )
+2/tile_mode = 0
+2/occluder_offset = Vector2( 0, 0 )
+2/occluder = SubResource( 9 )
+2/navigation_offset = Vector2( 0, 0 )
+2/navigation = SubResource( 8 )
+2/shape_offset = Vector2( 0, 0 )
+2/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+2/shape = SubResource( 10 )
+2/shape_one_way = false
+2/shape_one_way_margin = 1.0
+2/shapes = [ {
+"autotile_coord": Vector2( 0, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 10 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+} ]
+2/z_index = 0
 
 [node name="Test" type="Node2D"]
 
@@ -84,12 +118,14 @@ current = true
 zoom = Vector2( 0.4, 0.4 )
 
 [node name="TileMap" type="TileMap" parent="."]
+position = Vector2( 1, 0 )
 tile_set = SubResource( 7 )
 cell_size = Vector2( 8, 8 )
 format = 1
-tile_data = PoolIntArray( -196616, 0, 0, -196612, 0, 0, -262144, 0, 0, -262140, 0, 0, -262136, 0, 0, -262132, 0, 0, 65528, 1, 0, 65532, 1, 0, 0, 1, 0, 4, 1, 0, 12, 1, 0 )
+tile_data = PoolIntArray( -262153, 0, 0, -262149, 0, 0, -25, 2, 0, -24, 2, 0, -23, 2, 0, -22, 2, 0, -21, 2, 0, -20, 2, 0, -19, 2, 0, -18, 2, 0, -17, 2, 0, -16, 2, 0, -15, 2, 0, -14, 2, 0, -13, 2, 0, -12, 2, 0, -11, 2, 0, -10, 2, 0, -9, 2, 0, -8, 2, 0, -7, 2, 0, -6, 2, 0, -5, 2, 0, -4, 2, 0, -3, 2, 0, -2, 2, 0, -1, 2, 0, -65536, 2, 0, -65535, 2, 0, -65534, 2, 0, -65533, 2, 0, -65532, 2, 0, -65531, 2, 0, -65530, 2, 0, -65529, 2, 0, -65528, 2, 0, -65527, 2, 0, -65526, 2, 0, -65525, 2, 0, -65524, 2, 0, -65523, 2, 0, -65522, 2, 0, -65521, 2, 0, -65520, 2, 0, -65519, 2, 0, -65518, 2, 0, -65517, 2, 0, -65516, 2, 0, -65515, 2, 0, -65514, 2, 0, -65513, 2, 0, -65512, 2, 0, 65511, 1073741826, 0, 65512, 1073741826, 0, 65513, 1073741826, 0, 65514, 1073741826, 0, 65515, 1073741826, 0, 65516, 1073741826, 0, 65517, 1073741826, 0, 65518, 1073741826, 0, 65519, 1073741826, 0, 65520, 1073741826, 0, 65521, 1073741826, 0, 65522, 1073741826, 0, 65523, 1073741826, 0, 65524, 1073741826, 0, 65525, 1073741826, 0, 65526, 1073741826, 0, 65527, 1073741826, 0, 65528, 1073741826, 0, 65529, 1073741826, 0, 65530, 1073741826, 0, 65531, 1073741826, 0, 65532, 1073741826, 0, 65533, 1073741826, 0, 65534, 1073741826, 0, 65535, 1073741826, 0, 0, 1073741826, 0, 1, 1073741826, 0, 2, 1073741826, 0, 3, 1073741826, 0, 4, 1073741826, 0, 5, 1073741826, 0, 6, 1073741826, 0, 7, 1073741826, 0, 8, 1073741826, 0, 9, 1073741826, 0, 10, 1073741826, 0, 11, 1073741826, 0, 12, 1073741826, 0, 13, 1073741826, 0, 14, 1073741826, 0, 15, 1073741826, 0, 16, 1073741826, 0, 17, 1073741826, 0, 18, 1073741826, 0, 19, 1073741826, 0, 20, 1073741826, 0, 21, 1073741826, 0, 22, 1073741826, 0, 23, 1073741826, 0, 24, 1073741826, 0 )
 
 [node name="Crate" parent="." instance=ExtResource( 3 )]
-position = Vector2( 80.422, 0 )
+position = Vector2( -40, 0 )
 PhysicalStart = 90.0
+UseGhost = false
 GhostStart = 80.0
