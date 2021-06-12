@@ -11,26 +11,26 @@ using Godot.Node2D;
 using Godot.KinematicBody2D;
 
 public class player : Node2D {
-    [Export] public float XStart = 0.0;
-    [Export] public float PhysicalStart = 0.0;
-    [Export] public float GhostStart = 0.0;
+	[Export] public float XStart = 0.0;
+	[Export] public float PhysicalStart = 0.0;
+	[Export] public float GhostStart = 0.0;
 
-    private KinematicBody2D physical = GetNode(\"Physical\");
-    private KinematicBody2D ghost = GetNode(\"Ghost\");
+	private KinematicBody2D physical = GetNode(\"Physical\");
+	private KinematicBody2D ghost = GetNode(\"Ghost\");
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready() {
-        physical = GetNode<KinematicBody2D>(\"Physical\");
-        physical.position.y = PhysicalStart;
-        ghost = GetNode<KinematicBody2D>(\"Ghost\");
-        ghost.position.y = GhostStart;
+	// Called when the node enters the scene tree for the first time.
+	public override void _Ready() {
+		physical = GetNode<KinematicBody2D>(\"Physical\");
+		physical.position.y = PhysicalStart;
+		ghost = GetNode<KinematicBody2D>(\"Ghost\");
+		ghost.position.y = GhostStart;
 
-        this.position.x = XStart;
-    }
+		this.position.x = XStart;
+	}
 
   // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(float delta) {
-    }
+	public override void _Process(float delta) {
+	}
 }
 "
 
