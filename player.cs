@@ -147,6 +147,14 @@ public class player : Node2D {
         top.Position = bottom.Position;
         bottom.Position = topPosition;
 
+        Vector2 topRayPosition = top.ray.Position;
+        top.ray.Position = bottom.ray.Position;
+        bottom.ray.Position = topRayPosition;
+
+        Vector2 topRayCast = top.ray.CastTo;
+        top.ray.CastTo = bottom.ray.CastTo;
+        bottom.ray.CastTo = topRayCast;
+
         EmitSignal(nameof(SwapRealms));
     }
 }

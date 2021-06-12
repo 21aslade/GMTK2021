@@ -11,6 +11,8 @@ public class vertical : KinematicBody2D {
     public Timer timer;
     public AnimatedSprite sprite;
 
+    public RayCast2D ray;
+
     private enum AirState {
         Jump,
         Climb,
@@ -27,6 +29,11 @@ public class vertical : KinematicBody2D {
         timer = GetNode<Timer>("Timer");
         timer.ProcessMode = Timer.TimerProcessMode.Physics;
         sprite = GetNode<AnimatedSprite>("AnimatedSprite");
+        ray = GetNode<RayCast2D>("RayCast2D");
+    }
+
+    public void Flip(bool flipped) {
+
     }
 
     public bool IsGrounded() {
@@ -35,10 +42,12 @@ public class vertical : KinematicBody2D {
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public float MoveVertical(float delta) {
-        bool nowGrounded = IsOnFloor();
+        bool nowGrounded = ray.IsColliding();
         if ((airState == AirState.Grounded) != nowGrounded) {
             // If collider grounded but not enum, set grounded
             // If enum grounded but not collider, set fall
+
+
             airState = nowGrounded ? AirState.Grounded : AirState.Fall;
         }
         else {
@@ -84,7 +93,7 @@ public class vertical : KinematicBody2D {
 
         if (airState == AirState.Grounded) {
             // Fall slightly on ground so you still collide with it
-            verticalSpeed = Gravity * delta;
+            verticalSpeed = 0.0f;
         }
         return verticalSpeed;
     }
