@@ -18,7 +18,7 @@ public class vertical : KinematicBody2D {
         Grounded
     }
     private AirState airState = AirState.Fall;
-    private float verticalSpeed = 0.0f;
+    public float verticalSpeed = 0.0f;
 
     private bool jumpUsed = false;
 
@@ -40,7 +40,6 @@ public class vertical : KinematicBody2D {
             // If collider grounded but not enum, set grounded
             // If enum grounded but not collider, set fall
             airState = nowGrounded ? AirState.Grounded : AirState.Fall;
-            GD.Print($"Now {airState}");
         }
         else {
             if ((airState == AirState.Grounded || airState == AirState.Jump) && Input.IsActionPressed("jump")) {
@@ -65,6 +64,10 @@ public class vertical : KinematicBody2D {
             else {
                 switch (airState) {
                     case AirState.Fall:
+                        if (verticalSpeed < 0) {
+                            sprite.Animation = "fall";
+                        }
+
                         if (verticalSpeed > TerminalVelocity) {
                             verticalSpeed += Gravity * delta;
                             if (verticalSpeed < TerminalVelocity) {
