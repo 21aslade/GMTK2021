@@ -1,0 +1,37 @@
+[gd_resource type="SpriteFrames" load_steps=13 format=2]
+
+[ext_resource path="res://Sprites/Individual Sprites/adventurer-idle-02.png" type="Texture" id=1]
+[ext_resource path="res://Sprites/Individual Sprites/adventurer-idle-01.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/Individual Sprites/adventurer-idle-00.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/Individual Sprites/adventurer-walk-03.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/Individual Sprites/adventurer-jump-00.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/Individual Sprites/adventurer-walk-01.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/Individual Sprites/adventurer-jump-01.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/Individual Sprites/adventurer-jump-03.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/Individual Sprites/adventurer-walk-00.png" type="Texture" id=9]
+[ext_resource path="res://Sprites/Individual Sprites/adventurer-walk-02.png" type="Texture" id=10]
+[ext_resource path="res://Sprites/Individual Sprites/adventurer-jump-02.png" type="Texture" id=11]
+[ext_resource path="res://Sprites/Individual Sprites/adventurer-walk-04.png" type="Texture" id=12]
+
+[resource]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 2 ), ExtResource( 1 ) ],
+"loop": true,
+"name": "idle",
+"speed": 1.5
+}, {
+"frames": [ ExtResource( 8 ), ExtResource( 11 ), ExtResource( 7 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "jump_land",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 9 ), ExtResource( 6 ), ExtResource( 10 ), ExtResource( 4 ), ExtResource( 12 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 5 ), ExtResource( 7 ), ExtResource( 11 ), ExtResource( 8 ) ],
+"loop": true,
+"name": "jump_up",
+"speed": 5.0
+} ]
