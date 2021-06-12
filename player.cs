@@ -10,6 +10,7 @@ public class player : Node2D {
 
     private vertical physical;
     private vertical ghost;
+    private Camera2D camera;
 
     private bool swapped = false;
     private bool swapButton = true;
@@ -35,6 +36,8 @@ public class player : Node2D {
         physical.Position = new Vector2(0.0f, -PhysicalStart);
         ghost = GetNode<vertical>("Ghost");
         ghost.Position = new Vector2(0.0f, GhostStart);
+
+        camera = GetNodeOrNull<Camera2D>("Camera2D");
     }
 
   // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -57,6 +60,11 @@ public class player : Node2D {
         // Make sure positions are together
         SyncPositions(originalX);
         SwapCheck();
+
+        // Move camera to appropriate position
+        if (camera != null) {
+            camera.Position = new Vector2(physical.Position.x, 0.0f);
+        }
     }
 
     private float MoveHorizontal() {
