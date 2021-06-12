@@ -1,8 +1,7 @@
 using Godot;
 using System;
 
-public class CrateVertical : KinematicBody2D
-{
+public class CrateVertical : KinematicBody2D {
     [Export] public float TerminalVelocity = -80.0f;
     [Export] public float Gravity = -320.0f;
 
