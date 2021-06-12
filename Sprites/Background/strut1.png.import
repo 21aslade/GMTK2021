@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/adventurer-get-up-04.png-2d8c36830fc63d9b1a55a5708634dfab.stex"
+path="res://.import/strut1.png-a64dac6b3b0d934da9d33c5dbdb3d394.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Individual Sprites/adventurer-get-up-04.png"
-dest_files=[ "res://.import/adventurer-get-up-04.png-2d8c36830fc63d9b1a55a5708634dfab.stex" ]
+source_file="res://Sprites/Background/strut1.png"
+dest_files=[ "res://.import/strut1.png-a64dac6b3b0d934da9d33c5dbdb3d394.stex" ]
 
 [params]
 
@@ -30,5 +30,5 @@ process/HDR_as_SRGB=false
 process/invert_color=false
 stream=false
 size_limit=0
-detect_3d=true
+detect_3d=false
 svg/scale=1.0
