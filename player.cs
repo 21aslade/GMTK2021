@@ -6,52 +6,34 @@ public class player : Node2D {
     [Export] public float GhostStart = 0.0f;
     [Export] public float MaxSpeed = 0.0f;
 
-    private KinematicBody2D physical;
-    private AnimatedSprite physicalSprite;
-    private KinematicBody2D ghost;
-    private AnimatedSprite ghostSprite;
+    [Signal] public delegate void SwapRealms();
 
-    private float physicalYSpeed = 0.0f;
-    private float ghostYSpeed = 0.0f;
+    private vertical physical;
+    private vertical ghost;
 
     private bool swapped = false;
     private bool swapButton = true;
 
-    private bool ghostJumpTimer = 4.0f;
-    private bool physicalJumpTimer = 4.0f;
-
-    private enum AirState {
-        Jump,
-        Climb,
-        Fall,
-        Ground
-    }
-
-    private AirState ghostAirState;
-    private AirState physicalAirState;
-
     private void SetFlip(bool flip) {
-        physicalSprite.FlipH = flip;
-        ghostSprite.FlipH = flip;
+        physical.sprite.FlipH = flip;
+        ghost.sprite.FlipH = flip;
     }
 
     private void SetAnimationIfGrounded(string anim) {
-        if (physicalAirState == AirState.Ground) {
-            physicalSprite.Animation = anim;
+        if (physical.IsGrounded()) {
+            physical.sprite.Animation = anim;
         }
 
-        if (ghostAirState == AirState.Ground) {
-            ghostSprite.Animation = anim;
+        if (ghost.IsGrounded()) {
+            ghost.sprite.Animation = anim;
         }
     }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
-        physical = GetNode<KinematicBody2D>("Physical");
-        physicalSprite = physical.GetNode<AnimatedSprite>("AnimatedSprite");
+        physical = GetNode<vertical>("Physical");
         physical.Position = new Vector2(0.0f, -PhysicalStart);
-        ghost = GetNode<KinematicBody2D>("Ghost");
-        ghostSprite = ghost.GetNode<AnimatedSprite>("AnimatedSprite");
+        ghost = GetNode<vertical>("Ghost");
         ghost.Position = new Vector2(0.0f, GhostStart);
     }
 
@@ -59,15 +41,16 @@ public class player : Node2D {
     public override void _PhysicsProcess(float delta) {
         float originalX = physical.Position.x;
         float horiz = MoveHorizontal();
-        if (flipped) {
-            MovePhysical(horiz, -1.0);
-            MoveGhost(horiz, 1.0);
+
+        if (!swapped) {
+            MoveVertical(physical, delta, horiz, -1.0f);
+            MoveVertical(ghost, delta, horiz, 1.0f);
         }
         else {
-            MovePhysical(horiz, 1.0);
-            MoveGhost(horiz, -1.0);
+            MoveVertical(physical, delta, horiz, 1.0f);
+            MoveVertical(ghost, delta, horiz, -1.0f);
         }
-        
+
         // POSITION SET USED AFTER THIS POINT
         // NO MORE PHYSICS CALLS ALLOWED
 
@@ -83,7 +66,7 @@ public class player : Node2D {
         // Either none or both are pressed
         if (left == right) {
             SetAnimationIfGrounded("idle");
-            return;
+            return 0.0f;
         }
 
         // Flip sprites based on facing (flipped if left)
@@ -99,34 +82,25 @@ public class player : Node2D {
         return direction * MaxSpeed;
     }
 
-    private void MovePhysical(float horiz, float up) {
-        float vert = 0.0f;
-        if ((physicalAirState == AirState.Grounded) != physical.isGrounded()) {
-            // If collider grounded but not enum, set grounded
-            // If enum grounded but not collider, set fall
-            physicalAirState = physical.isGrounded() ? AirState.Grounded : AirState.Fall;
-        }
-        else {
-            if (Input.IsActionPressed("jump")) {
-                
-            }
-        }
+    private void MoveVertical(vertical v, float delta, float horiz, float up) {
+        float vert = v.MoveVertical(delta);
 
         Vector2 upDir = new Vector2(0.0f, 1.0f) * up;
-        physical.MoveAndSlide(new Vector2(horiz, vert * up), upDir);
-    }
-
-    private void MoveGhost(float horiz, float up) {
-        
-
-        Vector2 upDir = new Vector2(0.0f, 1.0f) * up;
-        ghost.MoveAndSlide(new Vector(horiz, vert * up), upDir);
+        v.MoveAndSlide(new Vector2(horiz, vert * up), upDir);
     }
 
     private void SyncPositions(float originalX) {
         float physicalChange = Math.Abs(physical.Position.x - originalX);
         float ghostChange = Math.Abs(ghost.Position.x - originalX);
 
+        if (physicalChange > ghostChange) {
+            Vector2 newPosition = new Vector2(ghost.Position.x, physical.Position.y);
+            physical.MoveAndCollide(newPosition - physical.Position);
+        }
+        else {
+            Vector2 newPosition = new Vector2(physical.Position.x, ghost.Position.y);
+            ghost.MoveAndCollide(newPosition - ghost.Position);
+        }
     }
 
     private void SwapCheck() {

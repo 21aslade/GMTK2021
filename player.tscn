@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://player_ghost.tres" type="SpriteFrames" id=1]
 [ext_resource path="res://player_physical.tres" type="SpriteFrames" id=2]
+[ext_resource path="res://vertical.cs" type="Script" id=3]
 
 [sub_resource type="CSharpScript" id=1]
 script/source = "using Godot;
@@ -41,27 +42,47 @@ script = SubResource( 1 )
 MaxSpeed = 40.0
 
 [node name="Physical" type="KinematicBody2D" parent="."]
+collision_layer = 3
+script = ExtResource( 3 )
+JumpLen = 0.0
+JumpSpeed = 0.0
+TerminalVelocity = -80.0
+Gravity = -320.0
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Physical"]
 position = Vector2( 2, -4 )
 frames = ExtResource( 2 )
 animation = "idle"
+frame = 1
 playing = true
 offset = Vector2( -2, 0 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Physical"]
 shape = SubResource( 2 )
 
+[node name="Timer" type="Timer" parent="Physical"]
+one_shot = true
+
 [node name="Ghost" type="KinematicBody2D" parent="."]
+collision_layer = 3
+script = ExtResource( 3 )
+JumpLen = 0.5
+JumpSpeed = 80.0
+TerminalVelocity = -80.0
+Gravity = -320.0
+IsGhost = true
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Ghost"]
 position = Vector2( 2, 3 )
 frames = ExtResource( 1 )
 animation = "idle"
-frame = 2
+frame = 1
 playing = true
 offset = Vector2( -2, 0 )
 flip_v = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ghost"]
 shape = SubResource( 2 )
+
+[node name="Timer" type="Timer" parent="Ghost"]
+one_shot = true
