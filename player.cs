@@ -73,9 +73,6 @@ public class player : Node2D {
         SetFlip(left);
         SetAnimationIfGrounded("walk");
 
-        // Save original position for later...
-        float originalX = physical.Position.x;
-
         // Direction is positive if right, negative otherwise
         // We know left ^ right, so checking for right is enough
         float direction = right ? 1 : -1;
@@ -123,7 +120,7 @@ public class player : Node2D {
         }
     }
 
-    private void Swap(KinematicBody2D top, KinematicBody2D bottom) {
+    private void Swap(vertical top, vertical bottom) {
         AnimatedSprite topSprite = top.GetNode<AnimatedSprite>("AnimatedSprite");
         AnimatedSprite bottomSprite = bottom.GetNode<AnimatedSprite>("AnimatedSprite");
         topSprite.FlipV = true;
@@ -134,8 +131,14 @@ public class player : Node2D {
         topSprite.Position = new Vector2(topSprite.Position.x, bottomSprite.Position.y);
         bottomSprite.Position = new Vector2(bottomSprite.Position.x, topYPosition);
 
+        float topSpeed = top.verticalSpeed;
+        top.verticalSpeed = bottom.verticalSpeed;
+        bottom.verticalSpeed = topSpeed;
+
         Vector2 topPosition = top.Position;
         top.Position = bottom.Position;
         bottom.Position = topPosition;
+
+        EmitSignal("SwapRealms");
     }
 }
