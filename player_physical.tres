@@ -24,13 +24,13 @@ animations = [ {
 "name": "jump_land",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 5 ), ExtResource( 7 ), ExtResource( 11 ) ],
-"loop": false,
-"name": "jump_up",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 9 ), ExtResource( 6 ), ExtResource( 10 ), ExtResource( 4 ), ExtResource( 12 ) ],
 "loop": true,
 "name": "walk",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 5 ), ExtResource( 7 ), ExtResource( 11 ) ],
+"loop": false,
+"name": "jump_up",
 "speed": 5.0
 } ]
