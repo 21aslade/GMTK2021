@@ -139,6 +139,6 @@ public class player : Node2D {
         top.Position = bottom.Position;
         bottom.Position = topPosition;
 
-        EmitSignal("SwapRealms");
+        EmitSignal(nameof(SwapRealms));
     }
 }
