@@ -17,14 +17,32 @@ public class player : Node2D {
     private bool swapped = false;
     private bool swapButton = true;
 
+    private bool ghostJumpTimer = 4.0f;
+    private bool physicalJumpTimer = 4.0f;
+
+    private enum AirState {
+        Jump,
+        Climb,
+        Fall,
+        Ground
+    }
+
+    private AirState ghostAirState;
+    private AirState physicalAirState;
+
     private void SetFlip(bool flip) {
         physicalSprite.FlipH = flip;
         ghostSprite.FlipH = flip;
     }
 
-    private void SetAnimation(string anim) {
-        physicalSprite.Animation = anim;
-        ghostSprite.Animation = anim;
+    private void SetAnimationIfGrounded(string anim) {
+        if (physicalAirState == AirState.Ground) {
+            physicalSprite.Animation = anim;
+        }
+
+        if (ghostAirState == AirState.Ground) {
+            ghostSprite.Animation = anim;
+        }
     }
 
     // Called when the node enters the scene tree for the first time.
@@ -39,10 +57,79 @@ public class player : Node2D {
 
   // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _PhysicsProcess(float delta) {
-        MoveVertical(delta);
-        MoveHorizontal(delta);
+        float originalX = physical.Position.x;
+        float horiz = MoveHorizontal();
+        if (flipped) {
+            MovePhysical(horiz, -1.0);
+            MoveGhost(horiz, 1.0);
+        }
+        else {
+            MovePhysical(horiz, 1.0);
+            MoveGhost(horiz, -1.0);
+        }
+        
+        // POSITION SET USED AFTER THIS POINT
+        // NO MORE PHYSICS CALLS ALLOWED
 
-        // USES POSITION SET, must be done after all MoveAndCollide
+        // Make sure positions are together
+        SyncPositions(originalX);
+        SwapCheck();
+    }
+
+    private float MoveHorizontal() {
+        bool left = Input.IsActionPressed("ui_left");
+        bool right = Input.IsActionPressed("ui_right");
+
+        // Either none or both are pressed
+        if (left == right) {
+            SetAnimationIfGrounded("idle");
+            return;
+        }
+
+        // Flip sprites based on facing (flipped if left)
+        SetFlip(left);
+        SetAnimationIfGrounded("walk");
+
+        // Save original position for later...
+        float originalX = physical.Position.x;
+
+        // Direction is positive if right, negative otherwise
+        // We know left ^ right, so checking for right is enough
+        float direction = right ? 1 : -1;
+        return direction * MaxSpeed;
+    }
+
+    private void MovePhysical(float horiz, float up) {
+        float vert = 0.0f;
+        if ((physicalAirState == AirState.Grounded) != physical.isGrounded()) {
+            // If collider grounded but not enum, set grounded
+            // If enum grounded but not collider, set fall
+            physicalAirState = physical.isGrounded() ? AirState.Grounded : AirState.Fall;
+        }
+        else {
+            if (Input.IsActionPressed("jump")) {
+                
+            }
+        }
+
+        Vector2 upDir = new Vector2(0.0f, 1.0f) * up;
+        physical.MoveAndSlide(new Vector2(horiz, vert * up), upDir);
+    }
+
+    private void MoveGhost(float horiz, float up) {
+        
+
+        Vector2 upDir = new Vector2(0.0f, 1.0f) * up;
+        ghost.MoveAndSlide(new Vector(horiz, vert * up), upDir);
+    }
+
+    private void SyncPositions(float originalX) {
+        float physicalChange = Math.Abs(physical.Position.x - originalX);
+        float ghostChange = Math.Abs(ghost.Position.x - originalX);
+
+    }
+
+    private void SwapCheck() {
         if (Input.IsActionPressed("swap")) {
             if (!swapButton) {
                 if (!swapped) {
@@ -62,22 +149,6 @@ public class player : Node2D {
         }
     }
 
-    public void MoveVertical(float delta) {
-        float ghostDelta = VerticalGhost();
-        float physicalDelta = VerticalPhysical();
-
-        if (!swapped) {
-            // Flip physical, keep ghost
-            ghost.MoveAndCollide(new Vector2(0.0f, ghostDelta));
-            physical.MoveAndCollide(new Vector2(0.0f, -physicalDelta));
-        }
-        else {
-            // Flip ghost, keep physical
-            ghost.MoveAndCollide(new Vector2(0.0f, -ghostDelta));
-            physical.MoveAndCollide(new Vector2(0.0f, physicalDelta));
-        }
-    }
-
     private void Swap(KinematicBody2D top, KinematicBody2D bottom) {
         AnimatedSprite topSprite = top.GetNode<AnimatedSprite>("AnimatedSprite");
         AnimatedSprite bottomSprite = bottom.GetNode<AnimatedSprite>("AnimatedSprite");
@@ -92,54 +163,5 @@ public class player : Node2D {
         Vector2 topPosition = top.Position;
         top.Position = bottom.Position;
         bottom.Position = topPosition;
-    }
-
-    public float VerticalGhost() {
-        //ghostYSpeed -= 1.0f;
-
-        return -1.0f;
-    }
-
-    public float VerticalPhysical() {
-        return -1.0f;
-    }
-
-    public void MoveHorizontal() {
-        bool left = Input.IsActionPressed("ui_left");
-        bool right = Input.IsActionPressed("ui_right");
-
-        // Either none or both are pressed
-        if (left == right) {
-            SetAnimation("idle");
-            return;
-        }
-
-        // Flip sprites based on facing (flipped if left)
-        SetFlip(left);
-        SetAnimation("walk");
-
-        // Save original position for later...
-        float originalX = physical.Position.x;
-
-        // Direction is positive if right, negative otherwise
-        // We know left ^ right, so checking for right is enough
-        float direction = right ? 1 : -1;
-        float distance = direction * MaxSpeed;
-        Vector2 move = new Vector2(distance, 0.0f);
-
-        physical.MoveAndSlide(move);
-        ghost.MoveAndSlide(move);
-
-        float ghostDelta = ghost.Position.x - originalX;
-        float physicalDelta = physical.Position.x - originalX;
-
-        // Match x position with collide
-        // Avoids jank teleports?
-        if (Math.Abs(ghostDelta) >= Math.Abs(physicalDelta)) {
-            ghost.MoveAndCollide(new Vector2(physical.Position.x - ghost.Position.x, 0.0f));
-        }
-        else {
-            physical.MoveAndCollide(new Vector2(ghost.Position.x - physical.Position.x, 0.0f));
-        }
     }
 }
