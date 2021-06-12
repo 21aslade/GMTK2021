@@ -41,6 +41,25 @@ public class player : Node2D {
     public override void _PhysicsProcess(float delta) {
         MoveVertical(delta);
         MoveHorizontal(delta);
+
+        // USES POSITION SET, must be done after all MoveAndCollide
+        if (Input.IsActionPressed("swap")) {
+            if (!swapButton) {
+                if (!swapped) {
+                    Swap(physical, ghost);
+                }
+                else {
+                    Swap(ghost, physical);
+                }
+
+                swapped = !swapped;
+                swapButton = true;
+            }
+            
+        }
+        else {
+            swapButton = false;
+        }
     }
 
     public void MoveVertical(float delta) {
@@ -57,27 +76,9 @@ public class player : Node2D {
             ghost.MoveAndCollide(new Vector2(0.0f, -ghostDelta));
             physical.MoveAndCollide(new Vector2(0.0f, physicalDelta));
         }
-
-        if (Input.IsActionPressed("swap")) {
-            if (!swapButton) {
-                if (!swapped) {
-                    Swap(ref physical, ref ghost);
-                }
-                else {
-                    Swap(ref ghost, ref physical);
-                }
-
-                swapped = !swapped;
-                swapButton = true;
-            }
-            
-        }
-        else {
-            swapButton = false;
-        }
     }
 
-    private void Swap(ref KinematicBody2D top, ref KinematicBody2D bottom) {
+    private void Swap(KinematicBody2D top, KinematicBody2D bottom) {
         AnimatedSprite topSprite = top.GetNode<AnimatedSprite>("AnimatedSprite");
         AnimatedSprite bottomSprite = bottom.GetNode<AnimatedSprite>("AnimatedSprite");
         topSprite.FlipV = true;
@@ -91,8 +92,6 @@ public class player : Node2D {
         Vector2 topPosition = top.Position;
         top.Position = bottom.Position;
         bottom.Position = topPosition;
-
-        GD.Print($"Swapped: {top.Position.x}");
     }
 
     public float VerticalGhost() {
@@ -105,7 +104,7 @@ public class player : Node2D {
         return -1.0f;
     }
 
-    public void MoveHorizontal(float delta) {
+    public void MoveHorizontal() {
         bool left = Input.IsActionPressed("ui_left");
         bool right = Input.IsActionPressed("ui_right");
 
@@ -121,26 +120,26 @@ public class player : Node2D {
 
         // Save original position for later...
         float originalX = physical.Position.x;
-        GD.Print($"Original: {originalX}");
 
         // Direction is positive if right, negative otherwise
         // We know left ^ right, so checking for right is enough
         float direction = right ? 1 : -1;
-        float distance = direction * MaxSpeed * delta;
+        float distance = direction * MaxSpeed;
         Vector2 move = new Vector2(distance, 0.0f);
 
-        physical.MoveAndCollide(move);
-        ghost.MoveAndCollide(move);
+        physical.MoveAndSlide(move);
+        ghost.MoveAndSlide(move);
 
         float ghostDelta = ghost.Position.x - originalX;
         float physicalDelta = physical.Position.x - originalX;
 
-        // Keep y position, take x position from the one that moved less
+        // Match x position with collide
+        // Avoids jank teleports?
         if (Math.Abs(ghostDelta) >= Math.Abs(physicalDelta)) {
-            ghost.Position = new Vector2(physical.Position.x, ghost.Position.y);
+            ghost.MoveAndCollide(new Vector2(physical.Position.x - ghost.Position.x, 0.0f));
         }
         else {
-            physical.Position = new Vector2(ghost.Position.x, physical.Position.y);
+            physical.MoveAndCollide(new Vector2(ghost.Position.x - physical.Position.x, 0.0f));
         }
     }
 }
