@@ -17,6 +17,7 @@ public class Crate : Node2D {
         physical = GetNode<CrateVertical>("Physical");
         physical.Enable(UsePhysical);
         physical.Position = new Vector2(0.0f, -PhysicalStart);
+
         ghost = GetNode<CrateVertical>("Ghost");
         ghost.Enable(UseGhost);
         ghost.Position = new Vector2(0.0f, GhostStart);
@@ -37,14 +38,27 @@ public class Crate : Node2D {
 
         physical.Flip(flipped);
         ghost.Flip(!flipped);
+        if (UseGhost && UsePhysical) {
+            float topSpeed = physical.verticalSpeed;
+            physical.verticalSpeed = ghost.verticalSpeed;
+            ghost.verticalSpeed = topSpeed;
 
-        float topSpeed = physical.verticalSpeed;
-        physical.verticalSpeed = ghost.verticalSpeed;
-        ghost.verticalSpeed = topSpeed;
+            Vector2 topPosition = physical.Position;
+            physical.Position = ghost.Position;
+            ghost.Position = topPosition;
+        }
+        else if (UseGhost ^ UsePhysical) {
+            var used = UsePhysical ? physical : ghost;
 
-        Vector2 topPosition = physical.Position;
-        physical.Position = ghost.Position;
-        ghost.Position = topPosition;
+            var teleporter = (vertical)used.GetBodies()[0];
+
+            var phys = teleporter.GetParent<player>().GetNode<vertical>("Physical");
+            var ghos = teleporter.GetParent<player>().GetNode<vertical>("Ghost");
+            var nontp = (teleporter == ghos) ? phys : ghos;
+
+            Vector2 delta = GlobalPosition - nontp.GlobalPosition;
+            GlobalPosition = teleporter.GlobalPosition + delta;
+        }
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -53,18 +67,30 @@ public class Crate : Node2D {
         float horiz = MoveHorizontal();
 
         if (!flipped) {
-            MoveCrate(physical, delta, horiz, -1.0f);
-            MoveCrate(ghost, delta, horiz, 1.0f);
+            if (UsePhysical) {
+                MoveCrate(physical, delta, horiz, -1.0f);
+            }
+            
+            if (UseGhost) {
+                MoveCrate(ghost, delta, horiz, 1.0f);
+            }
         }
         else {
-            MoveCrate(physical, delta, horiz, 1.0f);
-            MoveCrate(ghost, delta, horiz, -1.0f);
+            if (UsePhysical) {
+                MoveCrate(physical, delta, horiz, 1.0f);
+            }
+            
+            if (UseGhost) {
+                MoveCrate(ghost, delta, horiz, -1.0f);
+            }
         }
 
         // POSITION SET USED AFTER THIS POINT
         // NO MORE PHYSICS CALLS ALLOWED
 
-        SyncPositions(originalX);
+        if (UsePhysical && UseGhost) {
+            SyncPositions(originalX);
+        }
 
         if (flipEdge) {
             flipEdge = false;

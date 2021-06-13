@@ -62,4 +62,8 @@ public class CrateVertical : KinematicBody2D {
             particles.Emitting = false;
         }
     }
+
+    public Godot.Collections.Array GetBodies() {
+        return area.GetOverlappingBodies();
+    }
 }

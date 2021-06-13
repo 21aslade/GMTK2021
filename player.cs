@@ -17,6 +17,10 @@ public class player : Node2D {
 
     private void SetFlip(bool flip) {
         physical.sprite.FlipH = flip;
+        var climb = physical.GetNode<RayCast2D>("Climb");
+        climb.Rotation = flip ? (float)Math.PI : 0.0f;
+        var foot = physical.GetNode<RayCast2D>("CornerCheck");
+        foot.Rotation = flip ? (float)Math.PI : 0.0f;
         ghost.sprite.FlipH = flip;
     }
 
@@ -119,6 +123,9 @@ public class player : Node2D {
                 }
 
                 swapped = !swapped;
+
+                physical.PhysFlip(swapped);
+
                 swapButton = true;
             }
             
@@ -147,13 +154,13 @@ public class player : Node2D {
         top.Position = bottom.Position;
         bottom.Position = topPosition;
 
-        Vector2 topRayPosition = top.ray.Position;
-        top.ray.Position = bottom.ray.Position;
-        bottom.ray.Position = topRayPosition;
+        Vector2 topRayPosition = top.groundRay.Position;
+        top.groundRay.Position = bottom.groundRay.Position;
+        bottom.groundRay.Position = topRayPosition;
 
-        Vector2 topRayCast = top.ray.CastTo;
-        top.ray.CastTo = bottom.ray.CastTo;
-        bottom.ray.CastTo = topRayCast;
+        Vector2 topRayCast = top.groundRay.CastTo;
+        top.groundRay.CastTo = bottom.groundRay.CastTo;
+        bottom.groundRay.CastTo = topRayCast;
 
         EmitSignal(nameof(SwapRealms));
     }

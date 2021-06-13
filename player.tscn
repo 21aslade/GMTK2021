@@ -52,7 +52,8 @@ Gravity = -320.0
 [node name="AnimatedSprite" type="AnimatedSprite" parent="Physical"]
 position = Vector2( 2, -4 )
 frames = ExtResource( 2 )
-animation = "fall"
+animation = "climb_corner"
+frame = 2
 playing = true
 offset = Vector2( -2, 0 )
 
@@ -67,6 +68,17 @@ cast_to = Vector2( 0, 2 )
 [node name="Timer" type="Timer" parent="Physical"]
 one_shot = true
 
+[node name="Climb" type="RayCast2D" parent="Physical"]
+enabled = true
+cast_to = Vector2( 14, 0 )
+collision_mask = 4
+
+[node name="CornerCheck" type="RayCast2D" parent="Physical"]
+position = Vector2( 0, 20 )
+enabled = true
+cast_to = Vector2( 14, 0 )
+collision_mask = 4
+
 [node name="Ghost" type="KinematicBody2D" parent="."]
 collision_layer = 3
 script = ExtResource( 3 )
@@ -80,7 +92,7 @@ IsGhost = true
 position = Vector2( 2, 3 )
 frames = ExtResource( 1 )
 animation = "idle"
-frame = 1
+frame = 2
 playing = true
 offset = Vector2( -2, 0 )
 flip_v = true
