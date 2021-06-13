@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://player_ghost.tres" type="SpriteFrames" id=1]
 [ext_resource path="res://player_physical.tres" type="SpriteFrames" id=2]
 [ext_resource path="res://vertical.cs" type="Script" id=3]
+[ext_resource path="res://ambiance.wav" type="AudioStream" id=4]
 
 [sub_resource type="CSharpScript" id=1]
 script/source = "using Godot;
@@ -37,9 +38,15 @@ public class player : Node2D {
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 6.5, 14 )
 
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 6.5, 2 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 6.5, 2 )
+
 [node name="Player" type="Node2D"]
 script = SubResource( 1 )
-MaxSpeed = 40.0
+MaxSpeed = 60.0
 
 [node name="Physical" type="KinematicBody2D" parent="."]
 collision_layer = 3
@@ -60,10 +67,11 @@ offset = Vector2( -2, 0 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Physical"]
 shape = SubResource( 2 )
 
-[node name="RayCast2D" type="RayCast2D" parent="Physical"]
+[node name="RayCast2D" type="Area2D" parent="Physical"]
 position = Vector2( 0, 13 )
-enabled = true
-cast_to = Vector2( 0, 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Physical/RayCast2D"]
+shape = SubResource( 3 )
 
 [node name="Timer" type="Timer" parent="Physical"]
 one_shot = true
@@ -79,6 +87,11 @@ enabled = true
 cast_to = Vector2( 14, 0 )
 collision_mask = 4
 
+[node name="Audio" type="AudioStreamPlayer2D" parent="Physical"]
+stream = ExtResource( 4 )
+volume_db = -10.0
+pitch_scale = 2.0
+
 [node name="Ghost" type="KinematicBody2D" parent="."]
 collision_layer = 3
 script = ExtResource( 3 )
@@ -92,7 +105,6 @@ IsGhost = true
 position = Vector2( 2, 3 )
 frames = ExtResource( 1 )
 animation = "idle"
-frame = 2
 playing = true
 offset = Vector2( -2, 0 )
 flip_v = true
@@ -103,7 +115,8 @@ shape = SubResource( 2 )
 [node name="Timer" type="Timer" parent="Ghost"]
 one_shot = true
 
-[node name="RayCast2D" type="RayCast2D" parent="Ghost"]
+[node name="RayCast2D" type="Area2D" parent="Ghost"]
 position = Vector2( 0, -13 )
-enabled = true
-cast_to = Vector2( 0, -2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ghost/RayCast2D"]
+shape = SubResource( 4 )

@@ -5,10 +5,12 @@ public class Scanner : Light2D
 {
     vertical physical;
     Timer reset;
+    AudioStreamPlayer2D sound;
 
     public override void _Ready() {
         physical =  GetNode<vertical>("/root/Test/Player/Physical");
         reset = GetNode<Timer>("Timer");
+        sound = GetNode<AudioStreamPlayer2D>("AudioStreamPlayer2D");
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -25,9 +27,11 @@ public class Scanner : Light2D
 
         if (IsInSight(targetPos)) {
             Color = new Color(1.0f, 0.0f, 0.0f);
+            
 
             // Start the end timer if not already running
             if (reset.TimeLeft <= 0.0f) {
+                sound.Play();
                 reset.Start();
             }
         }

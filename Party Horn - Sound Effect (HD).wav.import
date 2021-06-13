@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Party Horn - Sound Effect (HD).wav-84bb042c749eecf8a985cc3bbbe9747f.sample"
+
+[deps]
+
+source_file="res://Party Horn - Sound Effect (HD).wav"
+dest_files=[ "res://.import/Party Horn - Sound Effect (HD).wav-84bb042c749eecf8a985cc3bbbe9747f.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

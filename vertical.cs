@@ -12,7 +12,7 @@ public class vertical : KinematicBody2D {
     public Timer timer;
     public AnimatedSprite sprite;
 
-    public RayCast2D groundRay;
+    public Area2D groundRay;
     public RayCast2D climbRay;
     public RayCast2D cornerRay;
     public bool flippedAndPhys = false;
@@ -35,7 +35,7 @@ public class vertical : KinematicBody2D {
         timer = GetNode<Timer>("Timer");
         timer.ProcessMode = Timer.TimerProcessMode.Physics;
         sprite = GetNode<AnimatedSprite>("AnimatedSprite");
-        groundRay = GetNode<RayCast2D>("RayCast2D");
+        groundRay = GetNode<Area2D>("RayCast2D");
         if (!IsGhost) {
             climbRay = GetNode<RayCast2D>("Climb");
             cornerRay = GetNode<RayCast2D>("CornerCheck");
@@ -48,11 +48,10 @@ public class vertical : KinematicBody2D {
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public float MoveVertical(float delta) {
-        bool nowGrounded = groundRay.IsColliding();
+        bool nowGrounded = groundRay.GetOverlappingBodies().Count > 1;
         if ((airState == AirState.Grounded) != nowGrounded && airState != AirState.Climb) {
             // If collider grounded but not enum, set grounded
             // If enum grounded but not collider, set fall
-
             airState = nowGrounded ? AirState.Grounded : AirState.Fall;
         }
         else {
@@ -160,7 +159,7 @@ public class vertical : KinematicBody2D {
                         sprite.Animation = "climb_down";
                         sprite.Play();
 
-                        if (groundRay.IsColliding()) {
+                        if (groundRay.GetOverlappingBodies().Count > 1) {
                             airState = AirState.Grounded;
                         }
                     }
@@ -193,7 +192,7 @@ public class vertical : KinematicBody2D {
                     sprite.Animation = "climb_down";
                     sprite.Play();
 
-                    if (groundRay.IsColliding()) {
+                    if (groundRay.GetOverlappingBodies().Count > 1) {
                         airState = AirState.Grounded;
                     }
                 }

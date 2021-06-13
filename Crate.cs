@@ -33,6 +33,7 @@ public class Crate : Node2D {
     }
 
     private void ActuallySwap() {
+
         // Toggle flip
         flipped = !flipped;
 

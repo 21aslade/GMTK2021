@@ -71,5 +71,4 @@ margin_bottom = 236.0
 
 [node name="FadeIn" parent="." instance=ExtResource( 5 )]
 visible = false
-
 [connection signal="pressed" from="Menu/CenterRow/CenterContainer/Buttons/Start" to="." method="_on_Start_pressed"]

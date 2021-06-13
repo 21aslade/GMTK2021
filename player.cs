@@ -115,6 +115,7 @@ public class player : Node2D {
     private void SwapCheck() {
         if (Input.IsActionPressed("swap")) {
             if (!swapButton) {
+                GetNode<AudioStreamPlayer2D>("Physical/Audio").Play();
                 if (!swapped) {
                     Swap(physical, ghost);
                 }
@@ -157,10 +158,6 @@ public class player : Node2D {
         Vector2 topRayPosition = top.groundRay.Position;
         top.groundRay.Position = bottom.groundRay.Position;
         bottom.groundRay.Position = topRayPosition;
-
-        Vector2 topRayCast = top.groundRay.CastTo;
-        top.groundRay.CastTo = bottom.groundRay.CastTo;
-        bottom.groundRay.CastTo = topRayCast;
 
         EmitSignal(nameof(SwapRealms));
     }
