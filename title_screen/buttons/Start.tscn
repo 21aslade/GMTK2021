@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://title_screen/StartButton_UI.png" type="Texture" id=1]
+[ext_resource path="res://title_screen/buttons/Start.gd" type="Script" id=2]
+
+[node name="Start" type="TextureButton"]
+margin_left = 340.0
+margin_top = 50.0
+margin_right = 400.0
+margin_bottom = 32.0
+texture_normal = ExtResource( 1 )
+texture_pressed = ExtResource( 1 )
+texture_hover = ExtResource( 1 )
+texture_disabled = ExtResource( 1 )
+texture_focused = ExtResource( 1 )
+stretch_mode = 4
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+scene_to_load = "res://Main.tscn"
